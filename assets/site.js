@@ -101,7 +101,7 @@ window.FSC.initServicePage = function initServicePage(DATA) {
     $('#serviceLabels').replaceChildren(...d.labels.map(x => { const e = document.createElement('span'); e.textContent = x; return e; }));
     $('#features').innerHTML = d.features.map((x, i) => '<article class="feature"><div class="num">0' + (i + 1) + '</div><h3>' + x[0] + '</h3><p>' + x[1] + '</p></article>').join('');
     $('#formTitle').textContent = d.name + ' 먼저 만나기';
-    $('#chips').replaceChildren(...['응답 안 함', ...d.choices].map((text, i) => { const l = document.createElement('label'); l.className = 'chip'; const a = document.createElement('input'); a.type = 'radio'; a.name = 'answer'; a.value = i ? text : ''; a.defaultChecked = i === 0; const s = document.createElement('span'); s.textContent = text; l.append(a, s); return l; }));
+    $('#chips').replaceChildren(...[{ value: '', label: '응답 안 함' }, ...d.choices].map((opt, i) => { const l = document.createElement('label'); l.className = 'chip'; const a = document.createElement('input'); a.type = 'radio'; a.name = 'answer'; a.value = opt.value; a.defaultChecked = i === 0; const s = document.createElement('span'); s.textContent = opt.label; l.append(a, s); return l; }));
     $('#form').reset(); $('#questionDetail').open = false; $('#answerConsentWrap').hidden = true; $('#answerConsent').required = false; $('#formError').hidden = true; $('#formBody').hidden = false; $('#successBody').hidden = true;
     for (const sel of ['#previewFormNote', '#previewBanner']) $(sel).hidden = !PREVIEW;
     $('#contactText').textContent = B.contactEmail || '공개 전 운영 문의 이메일을 설정합니다.'; $('#contactLink').hidden = !B.contactEmail; if (B.contactEmail) $('#contactLink').href = 'mailto:' + B.contactEmail;
