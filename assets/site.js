@@ -3,7 +3,7 @@
 
 const GA_MEASUREMENT_ID = 'G-BF6QHXXEL3';
 // TODO: Apps Script 웹 앱 배포 후 나온 /exec URL로 교체하세요.
-const BRIDGE_URL = 'https://script.google.com/macros/s/AKfycbzp3JqQ81DoAhB-lwmrcnwPiIgbSJGur-hd59-VO8VvmY8hx3HsBo63bzKZh3PSUiQFJQ/exec';
+const BRIDGE_URL = 'https://script.google.com/macros/s/AKfycbwKXYGkVmmwmf3Bkir_1VZ13LD4xNC2eLiYAfbFhrROCZGPwFpY8tNKQaT-Sj6TecDljQ/exec';
 // Apps Script 프로젝트의 Script Properties에 설정한 FSC_BRIDGE_SECRET과 반드시 같은 값이어야 합니다.
 const BRIDGE_SECRET = '562a6f687db32fba82c60935cfe6ca04d4ef61b4405ba4633232cf734ef69156';
 
