@@ -102,17 +102,22 @@ window.FSC.initServicePage = function initServicePage(DATA) {
     $('#features').innerHTML = d.features.map((x, i) => '<article class="feature"><div class="num">0' + (i + 1) + '</div><h3>' + x[0] + '</h3><p>' + x[1] + '</p></article>').join('');
     $('#formTitle').textContent = d.name + ' 먼저 만나기';
     $('#chips').replaceChildren(...[{ value: '', label: '응답 안 함' }, ...d.choices].map((opt, i) => { const l = document.createElement('label'); l.className = 'chip'; const a = document.createElement('input'); a.type = 'radio'; a.name = 'answer'; a.value = opt.value; a.defaultChecked = i === 0; const s = document.createElement('span'); s.textContent = opt.label; l.append(a, s); return l; }));
-    $('#form').reset(); $('#questionDetail').open = false; $('#answerConsentWrap').hidden = true; $('#answerConsent').required = false; $('#formError').hidden = true; $('#formBody').hidden = false; $('#successBody').hidden = true;
+    resetForm();
     for (const sel of ['#previewFormNote', '#previewBanner']) $(sel).hidden = !PREVIEW;
     $('#contactText').textContent = B.contactEmail || '공개 전 운영 문의 이메일을 설정합니다.'; $('#contactLink').hidden = !B.contactEmail; if (B.contactEmail) $('#contactLink').href = 'mailto:' + B.contactEmail;
     $('#operatorText').textContent = B.operator || 'FSC MVP 프로젝트 팀';
     for (const e of document.querySelectorAll('.retentionDays')) e.textContent = String(B.retentionDays || 90);
     $('#configBanner').hidden = PREVIEW || B.ready; $('#openForm').disabled = !PREVIEW && !B.ready;
   }
+  // 폼을 초기 상태로 되돌림. 새 신청은 새 requestId로 받아야 서버의 requestId 중복 검사에 걸리지 않음.
+  function resetForm() {
+    $('#form').reset(); $('#questionDetail').open = false; $('#answerConsentWrap').hidden = true; $('#answerConsent').required = false; $('#formError').hidden = true; $('#formBody').hidden = false; $('#successBody').hidden = true;
+    requestId = id(); requestEmail = '';
+  }
   function openModal(d) { focusStack.set(d, document.activeElement); d.showModal(); document.body.style.overflow = 'hidden'; }
   function closeModal(d) { if (pending && d.id === 'signupModal') return; d.close(); }
   for (const d of document.querySelectorAll('dialog')) {
-    d.addEventListener('close', () => { if (!document.querySelector('dialog[open]')) document.body.style.overflow = ''; const f = focusStack.get(d); if (f?.isConnected) f.focus(); });
+    d.addEventListener('close', () => { if (d.id === 'signupModal' && !$('#successBody').hidden) resetForm(); if (!document.querySelector('dialog[open]')) document.body.style.overflow = ''; const f = focusStack.get(d); if (f?.isConnected) f.focus(); });
     d.addEventListener('cancel', e => { if (pending && d.id === 'signupModal') e.preventDefault(); });
     d.addEventListener('click', e => { if (e.target !== d) return; const r = d.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeModal(d); });
   }
