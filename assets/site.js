@@ -2,6 +2,9 @@
 'use strict';
 
 const GA_MEASUREMENT_ID = 'G-BF6QHXXEL3';
+const ADS_ID = 'AW-18472516615';
+// 서비스별 Google Ads 전환 라벨. 광고를 집행하는 서비스만 추가합니다.
+const ADS_CONVERSION_LABELS = { 'ai-allpass': 'wq_5CJuS54MdEIf4sOhE' };
 // TODO: Apps Script 웹 앱 배포 후 나온 /exec URL로 교체하세요.
 const BRIDGE_URL = 'https://script.google.com/macros/s/AKfycbwKXYGkVmmwmf3Bkir_1VZ13LD4xNC2eLiYAfbFhrROCZGPwFpY8tNKQaT-Sj6TecDljQ/exec';
 // Apps Script 프로젝트의 Script Properties에 설정한 FSC_BRIDGE_SECRET과 반드시 같은 값이어야 합니다.
@@ -18,6 +21,7 @@ if (GA_MEASUREMENT_ID && !GA_MEASUREMENT_ID.includes('XXXX')) {
   document.head.appendChild(s);
   gtag('js', new Date());
   gtag('config', GA_MEASUREMENT_ID);
+  gtag('config', ADS_ID);
 }
 
 function trackEvent(type, params) {
@@ -90,6 +94,8 @@ window.FSC.initServicePage = function initServicePage(DATA) {
     if (seen.has(type)) return;
     seen.add(type);
     trackEvent(type, { service: current, campaign, device: base().device });
+    // 저장 성공 시에만 발생하는 signup_submit에 맞춰 Ads 전환을 보냄. requestId로 중복 전환 방지.
+    if (type === 'signup_submit' && ADS_CONVERSION_LABELS[current]) trackEvent('conversion', { send_to: ADS_ID + '/' + ADS_CONVERSION_LABELS[current], value: 1.0, currency: 'KRW', transaction_id: requestId });
   }
 
   function render() {
